@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 3, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"","debugId":null}},
+    {"offset": {"line": 55, "column": 0}, "map": {"version":3,"sources":["file:///C:/Project/web-ops/src/app/api/auth/logout/route.ts"],"sourcesContent":["import { NextResponse } from \"next/server\";\r\n\r\nexport async function GET() {\r\n  const res = NextResponse.json({ success: true });\r\n  res.cookies.set(\"token\", \"\", { path: \"/\", httpOnly: true, maxAge: 0 });\r\n  return res;\r\n}\r\n"],"names":[],"mappings":";;;;AAAA;;AAEO,eAAe;IACpB,MAAM,MAAM,gJAAY,CAAC,IAAI,CAAC;QAAE,SAAS;IAAK;IAC9C,IAAI,OAAO,CAAC,GAAG,CAAC,SAAS,IAAI;QAAE,MAAM;QAAK,UAAU;QAAM,QAAQ;IAAE;IACpE,OAAO;AACT","debugId":null}}]
+}

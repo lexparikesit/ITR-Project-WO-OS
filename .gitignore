@@ -1,0 +1,25 @@
+/node_modules
+/npm-debug.log
+/yarn-error.log
+/package-lock.json
+/yarn.lock
+
+# File Hasil Kompilasi & Build
+/build
+/dist
+/out
+/coverage
+
+# File Lingkungan (Environment Variables) - SENSITIF
+.env
+.env.local
+.env.development.local
+.env.production.local
+
+# Editor & Sistem Operasi
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Data Database & Cache
