@@ -1,8 +1,13 @@
+// src/app/api/auth/logout/route.ts
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
-export async function GET() {
-  const res = NextResponse.json({ success: true });
-  res.cookies.set("token", "", { path: "/", httpOnly: true, maxAge: 0 });
-  res.cookies.set("wtoken", "", { path: "/", httpOnly: true, maxAge: 0 });
-  return res;
+export async function POST() {
+  (await cookies()).set({
+    name: "token",
+    value: "",
+    path: "/",   // ⬅️ samain path
+    maxAge: 0,   // hapus
+  });
+  return NextResponse.json({ success: true });
 }

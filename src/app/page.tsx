@@ -60,6 +60,7 @@ export default function SignInPage() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack>
             <TextInput
+              variant="filled"
               label="Username"
               placeholder="masukkan username"
               type="text"
@@ -68,6 +69,7 @@ export default function SignInPage() {
               error={errors.username?.message}
             />
             <PasswordInput
+              variant="filled"
               label="Password"
               placeholder="••••••••"
               autoComplete="current-password"
@@ -75,15 +77,9 @@ export default function SignInPage() {
               error={errors.password?.message}
             />
             {errors.root?.message && <Text c="red">{errors.root.message}</Text>}
-            <Button type="submit" loading={isSubmitting} size="md">Sign in</Button>
+            <Button variant="filled" type="submit" loading={isSubmitting} size="md">Sign in</Button>
           </Stack>
         </form>
-
-        <Group justify="center" mt="md">
-          <Text c="dimmed" size="sm">
-            Don't have an account? <Anchor href="#" size="sm">Sign up</Anchor> for free.
-          </Text>
-        </Group>
       </Paper>
     </Container>
   );

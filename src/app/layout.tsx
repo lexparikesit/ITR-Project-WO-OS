@@ -32,7 +32,6 @@ export default function RootLayout({
       
       <head>
         {/* biar color scheme Mantine sinkron */}
-        <ColorSchemeScript defaultColorScheme="dark"/>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
