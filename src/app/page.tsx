@@ -7,7 +7,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import {
   Button, Container, Paper, Stack, Title, Text,
-  TextInput, PasswordInput, Group, Anchor, Divider
+  TextInput, PasswordInput, Group, Anchor, Divider,Image,
 } from "@mantine/core";
 
 const schema = z.object({
@@ -50,6 +50,14 @@ export default function SignInPage() {
   return (
     <Container size={460} py="xl">
       <Paper radius="md" withBorder p="xl" shadow="sm">
+        <Group justify="center" mb="sm">
+          <Image
+            src="/LOGO INDOTRAKTOR-02.png"          // simpan file di /public/logo.png
+            h={64}                   // tinggi 64px
+            fit="contain"
+            radius="md"         // kalau file belum ada, tampilkan placeholder
+          />
+        </Group>
         <Stack gap="xs">
           <Title order={2} ta="center">Sign In</Title>
           <Text c="dimmed" ta="center">Use your username and password to sign in</Text>
@@ -62,7 +70,7 @@ export default function SignInPage() {
             <TextInput
               variant="filled"
               label="Username"
-              placeholder="masukkan username"
+              placeholder="username"
               type="text"
               autoComplete="username"
               {...register("username")}

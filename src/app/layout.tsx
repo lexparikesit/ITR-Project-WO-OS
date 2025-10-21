@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-
+import "./globals.css";
 // 👉 Wajib: CSS Mantine
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
@@ -32,6 +32,7 @@ export default function RootLayout({
       
       <head>
         {/* biar color scheme Mantine sinkron */}
+        <ColorSchemeScript defaultColorScheme="dark"/>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import {
@@ -14,6 +15,7 @@ import {
   Loader,
   Select,
   Text,
+  Avatar,
 } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
 import {
@@ -22,10 +24,10 @@ import {
   type DataTableColumn,
 } from "mantine-datatable";
 import { IconSearch } from "@tabler/icons-react";
-import MonitorModal from "./MonitorModal"; // ✅ default import
+import MonitorModal from "./MonitorModal"; // popup offline
+import ThemeToggle from "../ThemeToggle"; // path relatif dari /cases
 
-
-/** Hitung bucket ageing dari angka (bukan mengandalkan string dari API) */
+/** Hitung bucket ageing dari angka */
 function bucket(
   age: number | null | undefined
 ): "0-30" | "31-60" | "61-120" | "+120" | "UNKNOWN" {
@@ -74,6 +76,30 @@ export default function CasesPage() {
     direction: "desc",
   });
 
+  const router = useRouter();
+
+  const { data: me } = useQuery({
+    queryKey: ["auth-me"],
+    queryFn: async () => (await axios.get("/api/auth/me")).data as {
+      authenticated: boolean;
+      user?: { id: string | null; name: string | null };
+    },
+    staleTime: 60_000,
+  });
+
+  async function handleLogout() {
+    try {
+      await axios.post("/api/auth/logout");
+    } finally {
+      router.replace("/");  // balik ke login
+    }
+  }
+
+  const displayName = me?.user?.name ?? "User";
+  const initials =
+    (displayName?.match(/\b\w/g)?.join("").slice(0, 2) ?? "U").toUpperCase();
+
+
   // ==== FETCH SEMUA DATA SEKALI ====
   const { data, isLoading, isFetching } = useQuery<Resp>({
     queryKey: ["cases-all"],
@@ -81,7 +107,7 @@ export default function CasesPage() {
       const res = await axios.get<Resp>("/api/cases", {
         params: {
           page: 1,
-          limit: 10000, // naikin jika perlu
+          limit: 10000, // naikin jika dataset > 10k
           orderBy: "createdAt",
           orderDir: "desc",
         },
@@ -184,7 +210,7 @@ export default function CasesPage() {
   const [selectedWoId, setSelectedWoId] = useState<string | undefined>();
 
   const openModal = (woId?: string) => {
-    setSelectedWoId(woId);
+    setSelectedWoId(woId);  // cukup set lokal (OFFLINE)
     setModalOpen(true);
   };
 
@@ -211,7 +237,7 @@ export default function CasesPage() {
       sortable: true,
       render: (r) => (r.createdAt ? new Date(r.createdAt).toLocaleString() : "-"),
     },
-    // === ACTIONS (buka modal) ===
+    // === ACTIONS (buka modal offline) ===
     {
       accessor: "actions",
       title: "",
@@ -222,7 +248,7 @@ export default function CasesPage() {
         return (
           <Button
             size="xs"
-            variant="light"
+            variant="dark"
             onClick={() => openModal(cid)}
             disabled={!cid}
           >
@@ -235,8 +261,23 @@ export default function CasesPage() {
 
   return (
     <Container size="xl" py="md">
+      
       <Stack gap="md">
         {/* Filter bar */}
+        <Paper p="sm" withBorder>
+          <Group justify="space-between" align="center">
+            <Group gap="sm">
+              <ThemeToggle />
+            </Group>
+            <Group gap="sm">
+              <Avatar radius="xl">{initials}</Avatar>
+              <Text>{displayName}</Text>
+              <Button variant="outline" size="compact-sm" onClick={handleLogout}>
+                Logout
+              </Button>
+            </Group>
+          </Group>
+        </Paper>
         <Paper p="md" withBorder>
           <Group align="end" wrap="wrap" gap="md" justify="space-between">
             <Group align="end" gap="md">
@@ -251,7 +292,7 @@ export default function CasesPage() {
 
               <TextInput
                 label="Brand"
-                placeholder="e.g. Komatsu"
+                placeholder="e.g. SDLG"
                 value={brand}
                 onChange={(e) => setBrand(e.currentTarget.value)}
                 style={{ minWidth: 160 }}
@@ -353,7 +394,7 @@ export default function CasesPage() {
         </Paper>
       </Stack>
 
-      {/* === MODAL === */}
+      {/* === MODAL OFFLINE === */}
       <MonitorModal
         opened={modalOpen}
         onClose={() => setModalOpen(false)}

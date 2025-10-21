@@ -1,13 +1,25 @@
-// src/app/api/auth/logout/route.ts
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
+
+export const dynamic = "force-dynamic";
 
 export async function POST() {
-  (await cookies()).set({
-    name: "token",
-    value: "",
-    path: "/",   // ⬅️ samain path
-    maxAge: 0,   // hapus
+  const res = NextResponse.json({ success: true });
+
+  // hapus cookies app + warehouse
+  res.cookies.set("token", "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 0,
   });
-  return NextResponse.json({ success: true });
+  res.cookies.set("wtoken", "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 0,
+  });
+
+  return res;
 }
